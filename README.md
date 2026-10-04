@@ -12,16 +12,49 @@ One file. No dependencies. Python 3.8+. Forge and NeoForge, 1.16–1.21.
 
 ## What the free edition does
 
-**`mods`** — every jar in your mods folder with its real mod id, version and how
-many IDs it registers. Flags duplicate mod ids, which are a hard startup failure
-and are almost always an old jar you forgot to delete.
+**`check`** — the reason this exists. Cross-references every ID your scripts,
+datapacks, quests and configs reference against the IDs your installed jars
+actually register, and names the ones that match nothing.
 
-It resolves `${file.jarVersion}` from the jar manifest, so you get the real
-version instead of Forge's unsubstituted placeholder.
+```bash
+python pack_doctor_free.py check path/to/mods --against path/to/pack
+```
+
+The certain findings are free: an ID whose **namespace has no installed mod at
+all** is unambiguously dead, and a pack that lost a mod can carry hundreds of
+them. Nothing crashes, nothing logs, and the first you hear of it is a player
+asking why a quest gave them nothing.
+
+**`mods`** — every jar with its real mod id, version and how many IDs it
+registers. Flags duplicate mod ids, which are a hard startup failure and are
+almost always an old jar you forgot to delete. It resolves
+`${file.jarVersion}` from the jar manifest, so you get the real version rather
+than Forge's unsubstituted placeholder.
 
 **`index`** — every item, block, entity, fluid, enchantment and effect ID your
-installed mods register, grouped by namespace. Useful on its own when you are
-writing recipes or quests and need to know the exact ID of something.
+installed mods register.
+
+## What the full version adds
+
+The **suggestion engine**: `cooked_caned_fish` → *did you mean
+`cooked_canned_fish`?* — and the confidence tiers that make that list worth
+reading. On a real 233-mod pack, naive matching produced 169 "typos", most of
+them nonsense. Comparing paths rather than whole IDs, and tiering by
+confidence, cut it to 63 — three of which were real and still live in a pack
+thousands of people play.
+
+Knowing an ID is dead is worth having for free. Knowing what you *meant*,
+without wading through a hundred false positives, is the part worth paying for.
+
+<https://kaiven.gumroad.com/l/pack-doctor>
+
+### One honest limit
+
+Suggestions use a 0.90 similarity cutoff on the path. That catches dropped and
+doubled letters (`stampler` → `stapler`, 0.933) but **misses transpositions**:
+`wigdet` → `widget` scores 0.833 and will not be suggested. Lowering the cutoff
+brings the false positives straight back, so it stays where it is.
+
 
 ## What it doesn't do
 
