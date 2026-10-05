@@ -1,11 +1,12 @@
 # Pack Doctor — Free Edition
 
-See what is actually installed in your modded Minecraft pack, and catch the
-duplicate jars that stop a server booting.
+Find the IDs in your modpack that point at nothing. They give the player no
+item, register no recipe, roll no loot — and never log an error.
 
 ```bash
-python pack_doctor_free.py mods   "MyServer/mods"
-python pack_doctor_free.py index  "MyServer/mods"
+python pack_doctor_free.py check "MyServer/mods" --against "MyServer"
+python pack_doctor_free.py mods  "MyServer/mods"
+python pack_doctor_free.py index "MyServer/mods"
 ```
 
 One file. No dependencies. Python 3.8+. Forge and NeoForge, 1.16–1.21.
@@ -58,12 +59,14 @@ brings the false positives straight back, so it stays where it is.
 
 ## What it doesn't do
 
-It does not check your pack's content. The full version adds `check`, which
-reads every ID your datapacks, KubeJS scripts, quests and configs reference and
-tells you which point at nothing — the typo'd IDs that silently give the player
-no item, register no recipe, roll no loot, and never log an error.
+It does not tell you what you *meant*. The free edition names the dead ID; it
+does not guess the live one you were reaching for, and it does not tier findings
+by confidence. On a 233-mod pack that is the difference between a list of 169
+candidates and 63 worth actually reading.
 
-<https://kaiven.gumroad.com/>
+It reads files, never the running game, and it never writes to your pack.
+
+<https://kaiven.gumroad.com/l/pack-doctor>
 
 ## How this was built
 
@@ -84,5 +87,5 @@ IDs come from translation keys, which covers everything a player can see, but a
 registry entry with no lang key cannot be confirmed from the jar. It reads files,
 not the running game.
 
-Free to use and to share, MIT. Not affiliated with Mojang, Microsoft,
-MinecraftForge or NeoForged.
+Free to use on any server you own or administer — see `LICENSE.txt`. Not
+affiliated with Mojang, Microsoft, MinecraftForge or NeoForged.

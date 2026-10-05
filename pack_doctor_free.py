@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pack Doctor (FREE EDITION) — what is actually installed in your pack?
+Pack Doctor (FREE EDITION) — which IDs in your pack point at nothing?
 
 A quest that rewards `minecraft:diamond_swrd`, a recipe that outputs an item
 from a mod you removed, a loot table pointing at `create:brass_igot`. None of
@@ -35,18 +35,17 @@ VERSION = "1.0.0-free"
 
 UPGRADE_NOTICE = """
   ----------------------------------------------------------------------
-  This is the FREE edition: `mods` and `index`.
+  FREE edition: `mods`, `index`, and `check` -- which reports every ID
+  your pack references that matches nothing any installed mod registers.
+  Those IDs silently give the player no item, register no recipe, roll
+  no loot, and never log an error.
 
-  The full version adds `check`, which is the part that finds problems:
-  it reads every ID your datapacks, KubeJS scripts, quests and configs
-  reference and tells you which ones point at nothing -- the typo'd ids
-  that silently give the player no item, register no recipe, roll no
-  loot, and never log an error.
+  The full version adds the part that saves the time: it suggests the ID
+  you probably meant, and tiers findings by confidence so a real typo is
+  not buried in fuzzy-match noise. On a 233-mod pack that was the
+  difference between 169 candidates and 63 worth reading.
 
-  It tiers findings by confidence, knows that KubeJS startup scripts
-  REGISTER content, and suggests the id you probably meant.
-
-  https://kaiven.gumroad.com/
+  https://kaiven.gumroad.com/l/pack-doctor
   ----------------------------------------------------------------------
 """
 
@@ -342,7 +341,6 @@ def cmd_index(args) -> int:
 
 
 def cmd_check(args) -> int:
-    import difflib
 
     mods = scan_mods(args.mods)
     index: Set[str] = set()
@@ -394,18 +392,12 @@ def cmd_check(args) -> int:
         if ns not in by_ns_index:
             unverified[r.ident].append(r)
             continue
-        # Compare only the PATH. Including the namespace inflates every score
-        # by however many characters the two IDs share up front: measured on
-        # real data, 'wastelandmod:icepack' scores 0.927 against
-        # 'wastelandmod:firepack' on the full id but 0.800 on the path alone,
-        # while a genuine typo ('cooked_caned_fish') stays at 0.971.
-        path = r.ident.split(":", 1)[1]
-        cand_paths = paths_by_ns[ns]
-        close = []
-        if close:
-            typos.setdefault(r.ident, (f"{ns}:{close[0]}", []))[1].append(r)
-        else:
-            unverified[r.ident].append(r)
+        # FREE EDITION: no suggestion engine. The finding is that this ID
+        # matches nothing any installed mod registers -- unambiguous, and
+        # the user can confirm it themselves. Naming the ID they probably
+        # meant, and the confidence tiering that keeps fuzzy-match noise
+        # out of the list, is the paid half.
+        typos.setdefault(r.ident, (None, []))[1].append(r)
 
     print(header("ID check", f"{len(refs)} references in {args.against}"))
     print(f"  mods indexed      {len(mods)}")
@@ -417,11 +409,10 @@ def cmd_check(args) -> int:
 
     if typos:
         exit_code = 1
-        print(f"LIKELY TYPOS — {len(typos)} ID(s) that silently do nothing\n" + THIN)
+        print(f"IDS THAT MATCH NOTHING INSTALLED — {len(typos)} ID(s)\n" + THIN)
         for ident in sorted(typos):
-            suggestion, hits = typos[ident]
+            hits = typos[ident][1]
             print(f"\n  {ident}")
-            print(f"      did you mean:  {suggestion}")
             for r in hits[:3]:
                 print(f"      {os.path.relpath(r.file, args.against)}:{r.line}")
             if len(hits) > 3:
