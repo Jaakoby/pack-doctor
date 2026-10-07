@@ -11,6 +11,13 @@ python pack_doctor_free.py index "MyServer/mods"
 
 One file. No dependencies. Python 3.8+. Forge and NeoForge, 1.16–1.21.
 
+Or install it from PyPI and skip the download:
+
+```bash
+pip install pack-doctor
+pack-doctor check "MyServer/mods" --against "MyServer"
+```
+
 ## What the free edition does
 
 **`check`** — the reason this exists. Cross-references every ID your scripts,
