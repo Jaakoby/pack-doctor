@@ -94,5 +94,11 @@ IDs come from translation keys, which covers everything a player can see, but a
 registry entry with no lang key cannot be confirmed from the jar. It reads files,
 not the running game.
 
+## Related reading
+
+- [KubeJS recipe or tag silently does nothing](https://jaakoby.github.io/guides/kubejs-recipe-not-working.html)
+  — the failure mode this tool exists to catch, explained end to end
+- [How to find which mod is crashing your server](https://jaakoby.github.io/guides/which-mod-is-crashing-my-server.html)
+
 Free to use on any server you own or administer — see `LICENSE.txt`. Not
 affiliated with Mojang, Microsoft, MinecraftForge or NeoForged.
