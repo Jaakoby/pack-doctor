@@ -17,7 +17,7 @@ No dependencies. No install. Python 3.8+.
     python pack_doctor.py check  "E:/Server/mods" --against "E:/Server/kubejs"
     python pack_doctor.py mods   "E:/Server/mods"
 
-Copyright (c) 2026. Sold as-is under the licence in LICENSE.txt.
+Copyright (c) 2026. Free edition, MIT licence -- see LICENSE.txt.
 """
 
 from __future__ import annotations

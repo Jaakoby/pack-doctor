@@ -100,5 +100,5 @@ not the running game.
   — the failure mode this tool exists to catch, explained end to end
 - [How to find which mod is crashing your server](https://jaakoby.github.io/guides/which-mod-is-crashing-my-server.html)
 
-Free to use on any server you own or administer — see `LICENSE.txt`. Not
+MIT licensed — see `LICENSE.txt`. Use it, fork it, ship it with your pack. Not
 affiliated with Mojang, Microsoft, MinecraftForge or NeoForged.
